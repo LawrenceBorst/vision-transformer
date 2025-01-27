@@ -2,6 +2,7 @@ from torch.utils.data import DataLoader
 from typing import Tuple, Optional
 from data.dataset import MNIST
 from torchvision import transforms
+from data.types import ImageItem
 
 
 def create_data_loaders(
@@ -9,7 +10,7 @@ def create_data_loaders(
     test_dir: str,
     transform: Optional[transforms.Compose] = None,
     num_workers: Optional[int] = 1,
-) -> Tuple[DataLoader, DataLoader, list[str]]:
+) -> Tuple[DataLoader[ImageItem], DataLoader[ImageItem], list[str]]:
     """
     Create data loaders for the MNIST dataset.
 
@@ -29,10 +30,10 @@ def create_data_loaders(
 
     test: MNIST = MNIST(target_dir=test_dir, transform=transform)
 
-    train_loader: DataLoader = DataLoader(
+    train_loader: DataLoader[ImageItem] = DataLoader(
         train, batch_size=64, shuffle=True, num_workers=num_workers
     )
-    test_loader: DataLoader = DataLoader(
+    test_loader: DataLoader[ImageItem] = DataLoader(
         test, batch_size=64, shuffle=False, num_workers=num_workers
     )
 

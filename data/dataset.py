@@ -6,9 +6,10 @@ from torchvision.transforms import Compose
 import pathlib
 import os
 from functools import cache
+from data.types import ImageItem
 
 
-class MNIST(Dataset):
+class MNIST(Dataset[ImageItem]):
     """
     A custom dataset class for the MNIST dataset
     """
@@ -27,7 +28,7 @@ class MNIST(Dataset):
             pathlib.Path(target_dir).glob("*/*.png")
         )
 
-        self._classes, self._classes_to_idx = self._find_classes(target_dir)
+        self._classes, self._classes_to_idx = self._find_classes()
 
     @property
     def classes(self) -> list[str]:
@@ -53,7 +54,7 @@ class MNIST(Dataset):
         """
         return len(self._paths)
 
-    def __getitem__(self, idx: int) -> Tuple[Tensor | Image.Image, int]:
+    def __getitem__(self, idx: int) -> ImageItem:
         """
         Returns the image and its class index
 
@@ -69,15 +70,12 @@ class MNIST(Dataset):
         return img, class_idx
 
     def _find_classes(
-        self, target_dir: str
+        self,
     ) -> Tuple[
         Annotated[list[str], "class names"], Annotated[dict[str, int], "class to index"]
     ]:
         """
-        Finds the class folders in the target directory
-
-        Args:
-            target_dir (str): The target directory
+        Obtains the class names and indices for this dataset
 
         Returns:
             Tuple[list[str], dict[str, int]]: The classes and their indices
@@ -86,7 +84,7 @@ class MNIST(Dataset):
             >>> MNIST._find_classes("static/MNIST/train")
             (['0', '1'], {'0': 0, '1': 1})
         """
-        cls: list[str] = [d.name for d in os.scandir(target_dir) if d.is_dir()]
+        cls: list[str] = [d.name for d in os.scandir(self._target_dir) if d.is_dir()]
 
         cls_idx: dict[str, int] = {cls: idx for idx, cls in enumerate(cls)}
 
