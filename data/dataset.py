@@ -1,7 +1,7 @@
 from typing import Annotated, Optional, Tuple
-from PIL import Image
+from PIL import Image, ImageFile
+import torch
 from torch.utils.data import Dataset
-from torch.types import Tensor
 from torchvision.transforms import Compose
 import pathlib
 import os
@@ -12,12 +12,20 @@ from data.types import ImageItem
 class MNIST(Dataset[ImageItem]):
     """
     A custom dataset class for the MNIST dataset
+
+    Args:
+        target_dir (str): The directory containing the dataset
+        transform (Optional[Compose]): The transformations to apply to the data
     """
 
     _transform: None | Compose
     _target_dir: str
 
-    def __init__(self, target_dir: str, transform: Optional[Compose] = None) -> None:
+    def __init__(
+        self,
+        target_dir: str,
+        transform: Optional[Compose] = None,
+    ) -> None:
         self._transform = transform
         self._target_dir = target_dir
 
@@ -46,7 +54,10 @@ class MNIST(Dataset[ImageItem]):
     def _load_image(self, idx: int) -> Image.Image:
         img_path: pathlib.PosixPath = self._paths[idx]
 
-        return Image.open(img_path)
+        img: ImageFile = Image.open(img_path, mode="r", formats=["PNG"])
+        img = img.convert("RGB")
+
+        return img
 
     def __len__(self) -> int:
         """
@@ -65,6 +76,7 @@ class MNIST(Dataset[ImageItem]):
         class_idx: int = self._classes_to_idx[cls_name]
 
         if self._transform:
+            # Remove last channel corresponding to alpha
             img = self._transform(img)
 
         return img, class_idx
