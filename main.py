@@ -8,17 +8,34 @@ from model.vit import ViT
 
 
 @click.command()
-@click.option("--debug", is_flag=True, help="Run in debug mode")
-def main(debug: bool) -> None:
-    DEBUG: bool = debug
-    if DEBUG:
+@click.option(
+    "--debug",
+    is_flag=True,
+    help="Run in debug mode",
+)
+@click.option(
+    "--epochs",
+    default=10,
+    type=int,
+    help="Number of epochs to train on",
+)
+@click.option(
+    "--df",
+    default=1.0,
+    type=float,
+    help="Fraction of the dataset to use",
+)
+def main(debug: bool, epochs: int, df: float) -> None:
+    _check_constraints(epochs, df)
+
+    if debug:
         print("Running in debug mode")
 
     setup.set_seed()
     device: torch.device = setup.get_device()
-    CPU_COUNT: int = setup.get_cpu_count() if not DEBUG else 1
+    CPU_COUNT: int = 3
     MNIST_STATS: dict = {"std": [0.3081], "mean": [0.1307]}
-    BATCH_SIZE: int = 32 if not DEBUG else 2
+    BATCH_SIZE: int = 32
 
     train_dir: str = "static/MNIST/train"
     test_dir: str = "static/MNIST/test"
@@ -39,6 +56,7 @@ def main(debug: bool) -> None:
         ),
         num_workers=CPU_COUNT,
         batch_size=BATCH_SIZE,
+        frac=df,
     )
 
     vit_model = ViT(
@@ -65,7 +83,7 @@ def main(debug: bool) -> None:
         test_loader=test_loader,
         optimizer=optimizer,
         loss_fn=loss_fn,
-        epochs=10,
+        epochs=epochs,
         model=vit_model,
         device=device,
     )
@@ -75,6 +93,17 @@ def main(debug: bool) -> None:
     print(results)
 
     return
+
+
+def _check_constraints(epochs: int, df: float) -> None:
+    if epochs <= 0:
+        raise Exception("Number of epochs must be greater than 0")
+
+    if df <= 0:
+        raise Exception("Dataset fraction must be greater than 0")
+
+    if df > 1.0:
+        raise Exception("Dataset fraction must be less than or equal to 1")
 
 
 if __name__ == "__main__":

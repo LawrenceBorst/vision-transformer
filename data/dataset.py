@@ -16,18 +16,22 @@ class MNIST(Dataset[ImageItem]):
     Args:
         target_dir (str): The directory containing the dataset
         transform (Optional[Compose]): The transformations to apply to the data
+        frac (float): Fraction of the dataset to use
     """
 
     _transform: None | Compose
     _target_dir: str
+    _frac: float
 
     def __init__(
         self,
         target_dir: str,
         transform: Optional[Compose] = None,
+        frac: float = 1.0,
     ) -> None:
         self._transform = transform
         self._target_dir = target_dir
+        self._frac = frac
 
         if not os.path.exists(target_dir):
             raise FileNotFoundError(f"Directory '{target_dir}' does not exist")
@@ -63,7 +67,7 @@ class MNIST(Dataset[ImageItem]):
         """
         Returns the total number of images in the dataset
         """
-        return len(self._paths)
+        return int(len(self._paths) * self._frac)
 
     def __getitem__(self, idx: int) -> ImageItem:
         """
