@@ -4,6 +4,19 @@ Having read through the excellent learnpytorch.io tutorials<sup>[1]</sup>, I was
 
 Another repo will hold the implementation of the original transformer architecture<sup>[3]</sup>. I highly recommend reading the chapter on transformers in Deep Learning<sup>[4]</sup> for an introduction alongside this paper.
 
+# Running the Code
+First install dependencies
+
+```
+poetry install  # install dependencies
+```
+
+If using VSCode can just run the debug scripts in the launch.json file. Otherwise
+```
+poetry shell    # activate venv
+python -m main
+```
+
 # Citations
 
 1. https://github.com/mrdbourke/pytorch-deep-learning/
