@@ -9,7 +9,7 @@
             "type": "debugpy",
             "request": "launch",
             "program": "${file}",
-            "args": ["--debug", "--epochs", "2", "--df", "0.01"],
+            "args": ["--debug", "--epochs", "1", "--limit_data", "100"],
             "console": "integratedTerminal"
         }
     ]

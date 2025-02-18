@@ -1,3 +1,4 @@
+import sys
 from typing import Annotated, Optional, Tuple
 from PIL import Image, ImageFile
 import torch
@@ -16,22 +17,26 @@ class MNIST(Dataset[ImageItem]):
     Args:
         target_dir (str): The directory containing the dataset
         transform (Optional[Compose]): The transformations to apply to the data
-        frac (float): Fraction of the dataset to use
+        limit_data (int | None): maximum number of samples from the dataset to use
     """
 
     _transform: None | Compose
     _target_dir: str
-    _frac: float
+    _limit_data: int
 
     def __init__(
         self,
         target_dir: str,
         transform: Optional[Compose] = None,
-        frac: float = 1.0,
+        limit_data: int | None = None,
     ) -> None:
         self._transform = transform
         self._target_dir = target_dir
-        self._frac = frac
+
+        if limit_data is None:
+            self._limit_data = sys.maxsize
+        else:
+            self._limit_data = limit_data
 
         if not os.path.exists(target_dir):
             raise FileNotFoundError(f"Directory '{target_dir}' does not exist")
@@ -67,7 +72,7 @@ class MNIST(Dataset[ImageItem]):
         """
         Returns the total number of images in the dataset
         """
-        return int(len(self._paths) * self._frac)
+        return min(len(self._paths), self._limit_data)
 
     def __getitem__(self, idx: int) -> ImageItem:
         """

@@ -1,3 +1,5 @@
+import sys
+from typing import Tuple
 import click
 from engine.engine import Engine
 import setup
@@ -20,13 +22,12 @@ from model.vit import ViT
     help="Number of epochs to train on",
 )
 @click.option(
-    "--df",
-    default=1.0,
-    type=float,
-    help="Fraction of the dataset to use",
+    "--limit_data",
+    type=int,
+    help="Limit number of samples to use in the train and test datasets",
 )
-def main(debug: bool, epochs: int, df: float) -> None:
-    _check_constraints(epochs, df)
+def main(debug: bool, epochs: int, limit_data: int | None) -> None:
+    epochs, limit_data = _use_constraints(epochs, limit_data)
 
     if debug:
         print("Running in debug mode")
@@ -56,7 +57,7 @@ def main(debug: bool, epochs: int, df: float) -> None:
         ),
         num_workers=CPU_COUNT,
         batch_size=BATCH_SIZE,
-        frac=df,
+        limit_data=limit_data,
     )
 
     vit_model = ViT(
@@ -95,15 +96,17 @@ def main(debug: bool, epochs: int, df: float) -> None:
     return
 
 
-def _check_constraints(epochs: int, df: float) -> None:
+def _use_constraints(epochs: int, limit_data: int) -> Tuple[int, int]:
     if epochs <= 0:
         raise Exception("Number of epochs must be greater than 0")
-
-    if df <= 0:
-        raise Exception("Dataset fraction must be greater than 0")
-
-    if df > 1.0:
+    
+    if limit_data < 0:
         raise Exception("Dataset fraction must be less than or equal to 1")
+
+    if limit_data is None:
+        limit_data = sys.maxsize
+    
+    return epochs, limit_data
 
 
 if __name__ == "__main__":
