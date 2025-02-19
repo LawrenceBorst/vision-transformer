@@ -1,4 +1,3 @@
-import torch
 from torch.utils.data import DataLoader
 from typing import Tuple, Optional
 from data.dataset import MNIST
@@ -20,13 +19,15 @@ def create_data_loaders(
     Args:
         train_dir (str): The directory to the training data.
         test_dir (str): The directory to the test data.
-        transform (Optional[transforms.Compose]): The transformations to apply to the data.
+        transform (Optional[transforms.Compose]): The transformations to apply to
+            the data.
         cpu_count (Optional[int]): The number of CPU cores to use.
         batch_size (Optional[int]): The batch size to use.
         limit_data (int | None): Maximum number of data samples to use
 
     Returns:
-        Tuple[DataLoader, DataLoader, list[str]]: A tuple containing the training data loader, the test data loader, and the classes.
+        Tuple[DataLoader, DataLoader, list[str]]: A tuple containing the training
+            data loader, the test data loader, and the classes.
     """
     train: MNIST = MNIST(
         target_dir=train_dir,

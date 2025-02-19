@@ -99,13 +99,13 @@ def main(debug: bool, epochs: int, limit_data: int | None) -> None:
 def _use_constraints(epochs: int, limit_data: int) -> Tuple[int, int]:
     if epochs <= 0:
         raise Exception("Number of epochs must be greater than 0")
-    
+
     if limit_data < 0:
         raise Exception("Dataset fraction must be less than or equal to 1")
 
     if limit_data is None:
         limit_data = sys.maxsize
-    
+
     return epochs, limit_data
 
 

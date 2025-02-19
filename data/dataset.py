@@ -1,7 +1,6 @@
 import sys
 from typing import Annotated, Optional, Tuple
 from PIL import Image, ImageFile
-import torch
 from torch.utils.data import Dataset
 from torchvision.transforms import Compose
 import pathlib

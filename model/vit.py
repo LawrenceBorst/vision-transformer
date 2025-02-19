@@ -15,7 +15,8 @@ class ViT(torch.nn.Module):
         in_channels (int): The number of color channels. Defaults to 3.
         patch_size (int): The size of the patches. Defaults to 16.
         n_transformer_layers (int): The number of transformer layers. Defaults to 12.
-        mlp_hidden_size (int): The size of the hidden layer in the MLP. Defaults to 3072.
+        mlp_hidden_size (int): The size of the hidden layer in the MLP. Defaults to
+            3072.
         n_heads (int): The number of heads in the multihead attention. Defaults to 12.
         mlp_dropout (float): The dropout rate in the MLP. Defaults to 0.1.
         embedding_dropout (float): The dropout rate in the embedding. Defaults to 0.1.

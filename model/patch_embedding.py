@@ -25,27 +25,29 @@ class PatchEmbedding(torch.nn.Module):
         in_channels: int = 3,
         patch_size: int = 16,
         img_size: List[int] = [224, 224],
-        device: torch.device = torch.device("cpu")
+        device: torch.device = torch.device("cpu"),
     ) -> None:
         [img_h, img_w] = img_size
         assert (
             img_w % patch_size == 0 and img_h % patch_size == 0
-        ), f"Input image size must be divisible by patch size, image shape: {(img_h, img_w)}, patch size: {patch_size}"
+        ), f"""Input image size must be divisible by patch size,
+        image shape: {(img_h, img_w)}, patch size: {patch_size}"""
 
         super().__init__()
 
         self._embedding_dim = get_embedding_dim(in_channels, patch_size)
         self._device = device
 
-        # Treat the series as an image of patches that are mapped to the transformer input
-        # via a learnable embedding. This is achievable with a convolution followed by a suitable linear mapping
+        # Treat the series as an image of patches that are mapped to the transformer
+        # input via a learnable embedding. This is achievable with a convolution
+        # followed by a suitable linear mapping
         self._patcher = torch.nn.Conv2d(
             in_channels=in_channels,
             out_channels=self._embedding_dim,
             kernel_size=patch_size,
             stride=patch_size,
             padding=0,
-            device=self._device
+            device=self._device,
         )
         self._img_size = img_size
         self._patch_size = patch_size
@@ -59,7 +61,8 @@ class PatchEmbedding(torch.nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
         Forward pass of the patch embedding layer.
-        Expects (image) input of shape (batch_size, in_channels, image_resolution, image_resolution).
+        Expects (image) input of shape
+        (batch_size, in_channels, image_resolution, image_resolution).
         """
         raw_embeddings: torch.Tensor = self._get_raw_patch_embeddings(x)
         class_token: torch.Tensor = self._get_class_token(x)
@@ -74,7 +77,7 @@ class PatchEmbedding(torch.nn.Module):
         return embedding_with_class_token + position_embeddings
 
     def _get_raw_patch_embeddings(self, x: torch.Tensor) -> torch.Tensor:
-        x_patched: torch.Tensor =self._patcher(x)
+        x_patched: torch.Tensor = self._patcher(x)
         return self._flatten(x_patched).permute(0, 2, 1)
 
     def _get_class_token(self, x: torch.Tensor) -> torch.Tensor:

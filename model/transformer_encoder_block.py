@@ -11,13 +11,14 @@ class TransformerEncoderBlock(torch.nn.Module):
     This block combines a multihead self attention block with an MLP
     Introducing residual connections to aid training in later layers.
 
-    Not much different from the in-built transformer encoder layer (had we used the same parameters)
-    But good practice nonetheless.
+    Not much different from the in-built transformer encoder layer (had we used the
+    same parameters) but good practice nonetheless.
 
     Args:
         embedding_dim (int): The embedding dimension. Defaults to 768.
         num_heads (int): The number of heads. Defaults to 12.
-        mlp_hidden_size (int): The size of the hidden layer in the MLP. Defaults to 3072.
+        mlp_hidden_size (int): The size of the hidden layer in the MLP. Defaults to
+            3072.
         mlp_dropout (float): The dropout rate in the MLP. Defaults to 0.1.
         device (torch.device): The device to run on (defaults to CPU).
     """

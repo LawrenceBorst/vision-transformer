@@ -1,2 +1,2 @@
-from .dataset import *
-from .data import *
+from .dataset import MNIST
+from .data import create_data_loaders
