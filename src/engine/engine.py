@@ -104,6 +104,3 @@ class Engine:
         test_acc = test_acc / len(self._test_loader)
 
         return test_loss, test_acc
-
-    def save_model() -> None:
-        pass
