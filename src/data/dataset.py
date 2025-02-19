@@ -6,7 +6,7 @@ from torchvision.transforms import Compose
 import pathlib
 import os
 from functools import cache
-from data.types import ImageItem
+from .types import ImageItem
 
 
 class MNIST(Dataset[ImageItem]):

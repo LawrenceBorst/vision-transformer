@@ -1,8 +1,8 @@
 from torch.utils.data import DataLoader
 from typing import Tuple, Optional
-from data.dataset import MNIST
+from .dataset import MNIST
 from torchvision import transforms
-from data.types import ImageItem
+from .types import ImageItem
 
 
 def create_data_loaders(

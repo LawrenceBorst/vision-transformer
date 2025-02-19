@@ -1,12 +1,12 @@
 import sys
 from typing import Tuple
 import click
-from engine.engine import Engine
-import setup
+from src.engine.engine import Engine
+import src.setup as setup
 import torch
 from torchvision import transforms
-from data import create_data_loaders
-from model.vit import ViT
+from src.data import create_data_loaders
+from src.model.vit import ViT
 
 
 @click.command()
@@ -96,15 +96,15 @@ def main(debug: bool, epochs: int, limit_data: int | None) -> None:
     return
 
 
-def _use_constraints(epochs: int, limit_data: int) -> Tuple[int, int]:
+def _use_constraints(epochs: int, limit_data: int | None) -> Tuple[int, int]:
     if epochs <= 0:
         raise Exception("Number of epochs must be greater than 0")
 
-    if limit_data < 0:
-        raise Exception("Dataset fraction must be less than or equal to 1")
-
     if limit_data is None:
         limit_data = sys.maxsize
+
+    if limit_data < 0:
+        raise Exception("Dataset fraction must be less than or equal to 1")
 
     return epochs, limit_data
 

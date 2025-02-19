@@ -1,9 +1,9 @@
 import torch
 from typing import List
 
-from model.patch_embedding import PatchEmbedding
-from model.transformer_encoder_block import TransformerEncoderBlock
-from model.utils import get_embedding_dim
+from .patch_embedding import PatchEmbedding
+from .transformer_encoder_block import TransformerEncoderBlock
+from .utils import get_embedding_dim
 
 
 class ViT(torch.nn.Module):

@@ -14,7 +14,7 @@ poetry install  # install dependencies
 If using VSCode can just run the debug scripts in the launch.json file. Otherwise
 ```
 poetry shell    # activate venv
-python -m main
+python -m scripts.main --epochs 1
 ```
 
 # Citations

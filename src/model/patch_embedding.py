@@ -1,7 +1,7 @@
 from typing import List
 import torch
 
-from model.utils import get_embedding_dim
+from .utils import get_embedding_dim
 
 
 class PatchEmbedding(torch.nn.Module):
