@@ -39,14 +39,16 @@ def main(debug: bool, epochs: int, limit_data: int | None) -> None:
     BATCH_SIZE: int = 32
 
     train_dir: str = "static/MNIST/train"
+    valid_dir: str = "static/MNIST/valid"
     test_dir: str = "static/MNIST/test"
     height: int = 224
     width: int = 224
     color_channels: int = 3
     patch_size: int = 16
 
-    train_loader, test_loader, classes = create_data_loaders(
+    train_loader, _, valid_loader, classes = create_data_loaders(
         train_dir=train_dir,
+        valid_dir=valid_dir,
         test_dir=test_dir,
         transform=transforms.Compose(
             [
@@ -81,7 +83,7 @@ def main(debug: bool, epochs: int, limit_data: int | None) -> None:
 
     engine: Engine = Engine(
         train_loader=train_loader,
-        test_loader=test_loader,
+        test_loader=valid_loader,
         optimizer=optimizer,
         loss_fn=loss_fn,
         epochs=epochs,
@@ -89,9 +91,9 @@ def main(debug: bool, epochs: int, limit_data: int | None) -> None:
         device=device,
     )
 
-    results = engine.train()
+    engine.train()
 
-    print(results)
+    engine.save_model()
 
     return
 

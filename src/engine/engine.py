@@ -1,3 +1,4 @@
+import os
 from typing import Tuple
 import torch
 from tqdm.auto import tqdm
@@ -104,3 +105,16 @@ class Engine:
         test_acc = test_acc / len(self._test_loader)
 
         return test_loss, test_acc
+
+    def save_model(self) -> None:
+        target_path: str = "model"
+
+        self._create_model_folder(target_path)
+
+        torch.save(self._model.state_dict(), f"{target_path}/model.pth")
+
+    def _create_model_folder(self, target_path: str) -> None:
+        if not os.path.exists(target_path):
+            os.makedirs(target_path)
+
+        return

@@ -7,6 +7,7 @@ from .types import ImageItem
 
 def create_data_loaders(
     train_dir: str,
+    valid_dir: str,
     test_dir: str,
     transform: Optional[transforms.Compose] = None,
     num_workers: Optional[int] = 1,
@@ -34,6 +35,11 @@ def create_data_loaders(
         transform=transform,
         limit_data=limit_data,
     )
+    valid: MNIST = MNIST(
+        target_dir=valid_dir,
+        transform=transform,
+        limit_data=limit_data,
+    )
     test: MNIST = MNIST(
         target_dir=test_dir,
         transform=transform,
@@ -43,8 +49,11 @@ def create_data_loaders(
     train_loader: DataLoader[ImageItem] = DataLoader(
         train, batch_size=batch_size, shuffle=True, num_workers=num_workers
     )
+    valid_loader: DataLoader[ImageItem] = DataLoader(
+        valid, batch_size=batch_size, shuffle=False, num_workers=num_workers
+    )
     test_loader: DataLoader[ImageItem] = DataLoader(
         test, batch_size=batch_size, shuffle=False, num_workers=num_workers
     )
 
-    return train_loader, test_loader, train.classes
+    return train_loader, valid_loader, test_loader, train.classes
