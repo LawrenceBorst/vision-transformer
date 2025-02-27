@@ -17,6 +17,13 @@ poetry shell    # activate venv
 python -m scripts.main --epochs 1
 ```
 
+The same can be run inside the container, which can be deployed and entered with
+
+```
+docker build -t vision_transformer .
+docker run -it --rm vision_transformer
+```
+
 # Citations
 
 1. https://github.com/mrdbourke/pytorch-deep-learning/
